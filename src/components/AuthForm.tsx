@@ -19,7 +19,7 @@ const AuthForm = ({ type }: Props) => {
   const isLoginForm = type === "login";
   const router = useRouter();
 
-  const {isPending, startTransition} = useTransition();
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
     console.log("Form submitted", formData);
