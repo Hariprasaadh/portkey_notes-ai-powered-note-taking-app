@@ -9,6 +9,7 @@ import { useTransition } from "react";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { loginAction, signUpAction } from "@/actions/users"; // Importing the actions for login and sign-up
 
 type Props = {
     type: "login" | "sign-up";
@@ -22,7 +23,36 @@ const AuthForm = ({ type }: Props) => {
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (formData: FormData) => {
-    console.log("Form submitted", formData);
+
+    // It allows to show a loading state while the form is being submitted.
+    // It is used to handle the form submission in a non-blocking way.
+    startTransition(async () => {
+      const email = formData.get("email") as string;
+      const password = formData.get("password") as string;
+
+      let errorMessage;
+      if (isLoginForm) {
+        errorMessage = (await loginAction(email, password)).errorMessage;
+      } else {
+        errorMessage = (await signUpAction(email, password)).errorMessage;
+      }
+
+      if (!errorMessage) {
+        toast.success(
+          isLoginForm ? "Logged in successfully!" : "Signed up successfully!",
+          {
+            description: "Redirecting to the Home Page...",
+            duration: 2000,
+          },
+        );
+        router.replace("/");
+      } else {
+        toast.error(errorMessage, {
+          description: "Please try again.",
+          duration: 5000,
+        });
+      }
+    });
   }
  
   return (

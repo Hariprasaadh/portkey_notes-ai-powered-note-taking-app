@@ -1,13 +1,19 @@
+'use client'
+
 import { shadow } from "@/styles/utils"
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "./ui/button";
 import DarkModeToggle from "@/components/DarkModeToggle"
 import LogOutButton from "@/components/LogOutButton";
 
 const Header = () => {
-
-  const user = 1;;
+  const user = 1;
+  const pathname = usePathname();
+  
+  // Check if current page is login or sign-up
+  const isAuthPage = pathname === '/login' || pathname === '/sign-up';
 
   return (
     <header
@@ -31,9 +37,9 @@ const Header = () => {
       </Link>
 
       <div className="flex gap-4">
-        {user ? (
+        {user && !isAuthPage ? (
           <LogOutButton />
-        ) : (
+        ) : !isAuthPage ? (
           <>
             <Button asChild className="hidden sm:block">
               <Link href="/sign-up">Sign Up</Link>
@@ -42,7 +48,7 @@ const Header = () => {
               <Link href="/login">Login</Link>
             </Button>
           </>
-        )}
+        ) : null}
 
         <DarkModeToggle />
       </div>
