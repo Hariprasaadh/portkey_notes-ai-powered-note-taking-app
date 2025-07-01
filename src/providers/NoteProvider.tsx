@@ -7,10 +7,8 @@ type NoteProviderContextType = {
   setNoteText: (noteText: string) => void;
 };
 
-export const NoteProviderContext = createContext<NoteProviderContextType>({
-  noteText: "",
-  setNoteText: () => {},
-});
+// Use null as default to properly detect if component is wrapped
+export const NoteProviderContext = createContext<NoteProviderContextType | null>(null);
 
 function NoteProvider({ children }: { children: React.ReactNode }) {
   const [noteText, setNoteText] = useState("");
