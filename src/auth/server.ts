@@ -32,14 +32,17 @@ export async function createClient() {
 
 // This function retrieves the current user from the Supabase auth session.
 export async function getUser() {
-  const { auth } = await createClient();
+  try {
+    const { auth } = await createClient();
+    const userObject = await auth.getUser();
 
-  const userObject = await auth.getUser();
+    if (userObject.error || !userObject.data.user) {
+      return null; 
+    }
 
-  if (userObject.error) {
-    console.error(userObject.error);
+    return userObject.data.user;
+  } catch (error) {
+    console.log('No active session'); 
     return null;
   }
-
-  return userObject.data.user;
 }
